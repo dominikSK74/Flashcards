@@ -1,6 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QIcon>
+#include <authorization/authmanager.h>
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +11,10 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/assets/temporary-logo.png"));
 
     QQmlApplicationEngine engine;
+
+    AuthManager authManager;
+    engine.rootContext()->setContextProperty("authManager", &authManager);
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

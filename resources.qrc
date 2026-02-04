@@ -7,5 +7,6 @@
         <file>assets/fullscreen-icon.svg</file>
         <file>assets/minus-icon.svg</file>
         <file>assets/smallscreen-icon.svg</file>
+        <file>config.ini</file>
     </qresource>
 </RCC>

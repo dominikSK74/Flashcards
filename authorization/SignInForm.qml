@@ -24,6 +24,20 @@ Rectangle {
             iconsrc: "qrc:assets/google-logo.svg"
             customFont: appFont
             anchors.horizontalCenter: parent.horizontalCenter
+
+            onClicked: authManager.signInWithGoogle();
         }
+
+
+        Connections {
+          target: authManager
+          function onFirebaseIdTokenChanged() {
+            console.log("Token Firebase gotowy:", authManager.firebaseIdToken)
+          }
+          function onErrorOccurred(msg) {
+            console.log("Error:", msg)
+          }
+        }
+
     }
 }

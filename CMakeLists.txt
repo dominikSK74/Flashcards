@@ -5,7 +5,7 @@ project(Flashcards VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Gui Qml )
+find_package(Qt6 REQUIRED COMPONENTS Quick Gui Qml Network NetworkAuth )
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -23,6 +23,7 @@ qt_add_qml_module(appFlashcards
         RESOURCES resources.qrc
         QML_FILES
         RESOURCES android/AndroidManifest.xml android/build.gradle android/res/values/libs.xml android/res/xml/qtprovider_paths.xml android/gradle/wrapper/gradle-wrapper.jar android/gradle/wrapper/gradle-wrapper.properties android/gradle.properties android/gradlew android/gradlew.bat
+        SOURCES authorization/authmanager.h authorization/authmanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -39,6 +40,8 @@ set_target_properties(appFlashcards PROPERTIES
 
 target_link_libraries(appFlashcards
     PRIVATE Qt6::Quick
+    Qt6::Network
+    Qt6::NetworkAuth
 )
 
 include(GNUInstallDirs)

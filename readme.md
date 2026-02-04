@@ -1,0 +1,1 @@
+You should remove .template extension from config file and fill keys.
