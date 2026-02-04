@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/JosefinSans-Regular.ttf</file>
+        <file>assets/google-logo.svg</file>
+        <file>assets/temporary-logo.png</file>
+        <file>assets/close-icon.svg</file>
+        <file>assets/fullscreen-icon.svg</file>
+        <file>assets/minus-icon.svg</file>
+        <file>assets/smallscreen-icon.svg</file>
+    </qresource>
+</RCC>
