@@ -25,16 +25,16 @@ Rectangle {
             customFont: appFont
             anchors.horizontalCenter: parent.horizontalCenter
 
-            onClicked: authManager.signInWithGoogle();
+            onClicked: loginController.signInWithGoogle();
         }
 
 
         Connections {
-          target: authManager
-          function onFirebaseIdTokenChanged() {
-            console.log("Token Firebase gotowy:", authManager.firebaseIdToken)
+          target: loginController
+          function onAuthorizationSuccess() {
+            stackView.push("../dashboard/dashboard.qml");
           }
-          function onErrorOccurred(msg) {
+          function onErrorChanged(msg) {
             console.log("Error:", msg)
           }
         }

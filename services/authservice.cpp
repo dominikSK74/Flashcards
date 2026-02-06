@@ -1,4 +1,4 @@
-#include "authmanager.h"
+#include "authservice.h"
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -9,9 +9,7 @@
 #include <QSettings>
 #include <QDir>
 
-AuthManager::AuthManager(QObject *parent)
-    : QObject{parent}
-{
+AuthService::AuthService(Session* session, QObject* parent) : QObject(parent), m_session(session) {
     QSettings settings(":config.ini", QSettings::IniFormat);
 
     m_googleClientId = settings.value("googleClientId").toString();
@@ -35,12 +33,12 @@ AuthManager::AuthManager(QObject *parent)
     m_oauth->setReplyHandler(m_replyHandler);
 
     connect(m_oauth, &QOAuth2AuthorizationCodeFlow::authorizeWithBrowser,
-            this, [](const QUrl &url) {
-                QDesktopServices::openUrl(url);
-            });
+        this, [](const QUrl &url) {
+        QDesktopServices::openUrl(url);
+    });
 
     m_oauth->setModifyParametersFunction([](QAbstractOAuth::Stage stage,
-                                            QMultiMap<QString, QVariant> *params) {
+        QMultiMap<QString, QVariant> *params) {
 
         if (stage == QAbstractOAuth::Stage::RequestingAuthorization) {
             params->insert("access_type", "offline");
@@ -53,7 +51,7 @@ AuthManager::AuthManager(QObject *parent)
     connect(m_oauth, &QOAuth2AuthorizationCodeFlow::granted, this, [this] {
         const QString googleIdToken = m_oauth->idToken();
         if (googleIdToken.isEmpty()) {
-            emit errorOccurred("No idToken from Google (idToken() is empty).");
+            emit authFailed("No idToken from Google (idToken() is empty).");
             return;
         }
 
@@ -64,25 +62,13 @@ AuthManager::AuthManager(QObject *parent)
 
     connect(m_oauth, &QOAuth2AuthorizationCodeFlow::requestFailed, this,
         [this](const QAbstractOAuth::Error err) {
-            Q_UNUSED(err);
-            emit errorOccurred("OAuth request failed (Google)");
+        Q_UNUSED(err);
+        emit authFailed("OAuth request failed (Google)");
     });
 }
 
-void AuthManager::signInWithGoogle()
-{
-    m_oauth->grant();
-}
 
-void AuthManager::signOut()
-{
-    m_googleIdToken.clear();
-    m_firebaseIdToken.clear();
-    emit firebaseIdTokenChanged();
-}
-
-
-void AuthManager::exchangeGoogleTokenToFirebase(const QString &googleIdToken)
+void AuthService::exchangeGoogleTokenToFirebase(const QString &googleIdToken)
 {
     QUrl url(QString("https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=%1")
                  .arg(m_firebaseApiKey));
@@ -108,24 +94,28 @@ void AuthManager::exchangeGoogleTokenToFirebase(const QString &googleIdToken)
 
         const auto doc = QJsonDocument::fromJson(data);
         if (!doc.isObject()) {
-            emit errorOccurred("Incorrect response from Firebase.");
+            emit authFailed("Incorrect response from Firebase.");
             return;
         }
 
         const auto obj = doc.object();
         if (obj.contains("error")) {
-            emit errorOccurred(QString("Firebase error: %1").arg(QString::fromUtf8(data)));
+            emit authFailed(QString("Firebase error: %1").arg(QString::fromUtf8(data)));
             return;
         }
 
-        m_firebaseIdToken = obj.value("idToken").toString();
-        if (m_firebaseIdToken.isEmpty()) {
-            emit errorOccurred("Error id");
+        QString firebaseIdToken = obj.value("idToken").toString();
+        if (firebaseIdToken.isEmpty()) {
+            emit authFailed("Error id");
             return;
         }
 
-        emit firebaseIdTokenChanged();
+        m_session->setToken(firebaseIdToken);
+        emit authSuccess();
     });
 
 }
 
+void AuthService::startLoginProcedure() {
+    m_oauth->grant();
+}

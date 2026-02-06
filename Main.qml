@@ -15,7 +15,9 @@ ApplicationWindow {
         source: "qrc:/fonts/JosefinSans-Regular.ttf"
     }
 
-    SignInForm {
-
+    StackView {
+        id: stackView
+        anchors.fill: parent
+        initialItem: "authorization/SignInForm.qml"
     }
 }

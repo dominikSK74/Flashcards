@@ -23,7 +23,11 @@ qt_add_qml_module(appFlashcards
         RESOURCES resources.qrc
         QML_FILES
         RESOURCES android/AndroidManifest.xml android/build.gradle android/res/values/libs.xml android/res/xml/qtprovider_paths.xml android/gradle/wrapper/gradle-wrapper.jar android/gradle/wrapper/gradle-wrapper.properties android/gradle.properties android/gradlew android/gradlew.bat
-        SOURCES authorization/authmanager.h authorization/authmanager.cpp
+        QML_FILES dashboard/dashboard.qml
+        SOURCES
+        SOURCES controllers/session.h controllers/session.cpp
+        SOURCES services/authservice.h services/authservice.cpp
+        SOURCES controllers/logincontroller.h controllers/logincontroller.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

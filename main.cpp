@@ -1,8 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QIcon>
-#include <authorization/authmanager.h>
 #include <QQmlContext>
+#include <controllers/session.h>
+#include <services/authservice.h>
+#include <controllers/logincontroller.h>
 
 int main(int argc, char *argv[])
 {
@@ -11,9 +13,11 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/assets/temporary-logo.png"));
 
     QQmlApplicationEngine engine;
+    Session* session = new Session();
+    AuthService* authservice = new AuthService(session);
+    LoginController* loginController = new LoginController(authservice);
 
-    AuthManager authManager;
-    engine.rootContext()->setContextProperty("authManager", &authManager);
+    engine.rootContext()->setContextProperty("loginController", loginController);
 
     QObject::connect(
         &engine,
