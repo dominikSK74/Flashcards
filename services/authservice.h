@@ -14,6 +14,7 @@ public:
     AuthService(Session* session, QObject* parent = nullptr);
     void exchangeGoogleTokenToFirebase(const QString &googleIdToken);
     void startLoginProcedure();
+    void logoutProcedure();
 
 private:
     QString m_googleClientId;

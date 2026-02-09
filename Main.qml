@@ -19,5 +19,19 @@ ApplicationWindow {
         id: stackView
         anchors.fill: parent
         initialItem: "authorization/SignInForm.qml"
+
+        Connections {
+            target: loginController
+            function onBackToSignIn() {
+                stackView.pop(stackView.depth - 1)
+            }
+        }
+
+        Connections {
+            target: firebaseController
+            function onLogout() {
+                loginController.logout();
+            }
+        }
     }
 }

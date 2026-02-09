@@ -21,6 +21,14 @@ Rectangle {
             customFont: appFont
             customText: "Czy mam dostęp?"
             btnWidth: 300
+            onClicked: firebaseController.testConnection();
+        }
+
+        MyButton {
+            customFont: appFont
+            customText: "Wyloguj"
+            btnWidth: 300
+            onClicked: loginController.logout();
         }
     }
 

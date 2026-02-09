@@ -14,9 +14,6 @@ AuthService::AuthService(Session* session, QObject* parent) : QObject(parent), m
 
     m_googleClientId = settings.value("googleClientId").toString();
     m_firebaseApiKey = settings.value("firebaseApiKey").toString();
-
-    qDebug() << m_googleClientId;
-
     m_oauth = new QOAuth2AuthorizationCodeFlow(&m_network_access_manager, this);
     m_oauth->setAuthorizationUrl(QUrl("https://accounts.google.com/o/oauth2/v2/auth"));
     m_oauth->setTokenUrl(QUrl("https://oauth2.googleapis.com/token"));
@@ -118,4 +115,8 @@ void AuthService::exchangeGoogleTokenToFirebase(const QString &googleIdToken)
 
 void AuthService::startLoginProcedure() {
     m_oauth->grant();
+}
+
+void AuthService::logoutProcedure() {
+    m_session->setToken("");
 }

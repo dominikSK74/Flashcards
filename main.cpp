@@ -5,6 +5,8 @@
 #include <controllers/session.h>
 #include <services/authservice.h>
 #include <controllers/logincontroller.h>
+#include <services/firebaseservice.h>
+#include <controllers/firebasecontroller.h>
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +18,11 @@ int main(int argc, char *argv[])
     Session* session = new Session();
     AuthService* authservice = new AuthService(session);
     LoginController* loginController = new LoginController(authservice);
+    FirebaseService* firebaseService = new FirebaseService(session);
+    FirebaseController* firebaseController = new FirebaseController(firebaseService);
 
     engine.rootContext()->setContextProperty("loginController", loginController);
+    engine.rootContext()->setContextProperty("firebaseController", firebaseController);
 
     QObject::connect(
         &engine,

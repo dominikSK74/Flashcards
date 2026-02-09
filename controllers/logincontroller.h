@@ -10,10 +10,12 @@ class LoginController : public QObject
 public:
     explicit LoginController(AuthService* authService, QObject *parent = nullptr);
     Q_INVOKABLE void signInWithGoogle();
+    Q_INVOKABLE void logout();
 
 signals:
     void errorChanged(const QString &message);
     void authorizationSuccess();
+    void backToSignIn();
 
 private:
     AuthService* m_authService;

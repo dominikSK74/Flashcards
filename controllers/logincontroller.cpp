@@ -19,3 +19,8 @@ LoginController::LoginController(AuthService* authService, QObject *parent)
 void LoginController::signInWithGoogle(){
     m_authService->startLoginProcedure();
 }
+
+void LoginController::logout(){
+    m_authService->logoutProcedure();
+    emit backToSignIn();
+}

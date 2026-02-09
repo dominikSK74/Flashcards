@@ -28,7 +28,6 @@ Rectangle {
             onClicked: loginController.signInWithGoogle();
         }
 
-
         Connections {
           target: loginController
           function onAuthorizationSuccess() {

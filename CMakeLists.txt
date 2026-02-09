@@ -28,6 +28,9 @@ qt_add_qml_module(appFlashcards
         SOURCES controllers/session.h controllers/session.cpp
         SOURCES services/authservice.h services/authservice.cpp
         SOURCES controllers/logincontroller.h controllers/logincontroller.cpp
+        SOURCES
+        SOURCES controllers/firebasecontroller.h controllers/firebasecontroller.cpp
+        SOURCES services/firebaseservice.h services/firebaseservice.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
