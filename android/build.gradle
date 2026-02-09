@@ -20,7 +20,11 @@ apply plugin: qtGradlePluginType
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     //noinspection GradleDependency
-    implementation 'androidx.core:core:1.16.0'
+    implementation 'androidx.core:core:1.16.0'    
+    implementation "androidx.credentials:credentials:1.6.0-rc01"
+    implementation "androidx.credentials:credentials-play-services-auth:1.6.0-rc01"
+    implementation "com.google.android.libraries.identity.googleid:googleid:1.2.0"
+
 }
 
 android {

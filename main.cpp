@@ -7,6 +7,8 @@
 #include <controllers/logincontroller.h>
 #include <services/firebaseservice.h>
 #include <controllers/firebasecontroller.h>
+#include <services/androidauthservice.h>
+#include <QSslSocket>
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +19,19 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     Session* session = new Session();
     AuthService* authservice = new AuthService(session);
-    LoginController* loginController = new LoginController(authservice);
+    #if defined(Q_OS_ANDROID)
+    AndroidAuthService* andoridAuthService = new AndroidAuthService(session);
+    LoginController* loginController = new LoginController(authservice, andoridAuthService);
+    #else
+    LoginController* loginController = new LoginController(authservice, nullptr);
+    #endif
+
+
+    qDebug() << "SSL supported:" << QSslSocket::supportsSsl()
+             << "backend:" << QSslSocket::activeBackend()
+             << "available:" << QSslSocket::availableBackends();
+
+
     FirebaseService* firebaseService = new FirebaseService(session);
     FirebaseController* firebaseController = new FirebaseController(firebaseService);
 

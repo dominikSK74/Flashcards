@@ -3,12 +3,13 @@
 
 #include <QObject>
 #include <services/authservice.h>
+#include <services/androidauthservice.h>
 
 class LoginController : public QObject
 {
     Q_OBJECT
 public:
-    explicit LoginController(AuthService* authService, QObject *parent = nullptr);
+    explicit LoginController(AuthService* authService, AndroidAuthService* andoridAuthService, QObject *parent = nullptr);
     Q_INVOKABLE void signInWithGoogle();
     Q_INVOKABLE void logout();
 
@@ -20,6 +21,7 @@ signals:
 private:
     AuthService* m_authService;
     QString m_error;
+    AndroidAuthService* m_androidAuthService;
 };
 
 #endif // LOGINCONTROLLER_H
