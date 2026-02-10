@@ -27,16 +27,5 @@ Rectangle {
 
             onClicked: loginController.signInWithGoogle();
         }
-
-        Connections {
-          target: loginController
-          function onAuthorizationSuccess() {
-            stackView.push("../dashboard/dashboard.qml");
-          }
-          function onErrorChanged(msg) {
-            console.log("Error:", msg)
-          }
-        }
-
     }
 }

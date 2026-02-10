@@ -25,18 +25,12 @@ int main(int argc, char *argv[])
     #else
     LoginController* loginController = new LoginController(authservice, nullptr);
     #endif
-
-
-    qDebug() << "SSL supported:" << QSslSocket::supportsSsl()
-             << "backend:" << QSslSocket::activeBackend()
-             << "available:" << QSslSocket::availableBackends();
-
-
     FirebaseService* firebaseService = new FirebaseService(session);
     FirebaseController* firebaseController = new FirebaseController(firebaseService);
 
     engine.rootContext()->setContextProperty("loginController", loginController);
     engine.rootContext()->setContextProperty("firebaseController", firebaseController);
+    engine.rootContext()->setContextProperty("session", session);
 
     QObject::connect(
         &engine,

@@ -5,7 +5,7 @@ project(Flashcards VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Gui Qml Network NetworkAuth )
+find_package(Qt6 REQUIRED COMPONENTS Quick Gui Qml Network NetworkAuth)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -33,6 +33,11 @@ qt_add_qml_module(appFlashcards
         SOURCES services/firebaseservice.h services/firebaseservice.cpp
         SOURCES services/androidauthservice.h services/androidauthservice.cpp
         SOURCES services/authjni.cpp
+        QML_FILES components/AppDrawer.qml
+        QML_FILES components/AppHeader.qml
+        QML_FILES components/+android/AppDrawer.qml
+        QML_FILES components/+android/AppHeader.qml
+        QML_FILES components/DrawerButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

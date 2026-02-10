@@ -8,5 +8,6 @@
         <file>assets/minus-icon.svg</file>
         <file>assets/smallscreen-icon.svg</file>
         <file>config.ini</file>
+        <file>assets/logout-icon.svg</file>
     </qresource>
 </RCC>

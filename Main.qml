@@ -2,11 +2,12 @@ import QtQuick
 import QtQuick.Controls.Fusion
 import "authorization"
 import "components"
+import "dashboard"
 
 ApplicationWindow {
     id: window
-    width: 640
-    height: 480
+    minimumWidth: 720
+    minimumHeight: 480
     visible: true
     title: qsTr("Flashcards")
 
@@ -19,6 +20,7 @@ ApplicationWindow {
         id: stackView
         anchors.fill: parent
         initialItem: "authorization/SignInForm.qml"
+        // initialItem: "dashboard/dashboard.qml"
 
         Connections {
             target: loginController
@@ -32,6 +34,17 @@ ApplicationWindow {
             function onLogout() {
                 loginController.logout();
             }
+        }
+
+        Connections {
+          target: loginController
+          function onAuthorizationSuccess() {
+            stackView.push("dashboard/dashboard.qml");
+            window.visibility = Window.Maximized;
+          }
+          function onErrorChanged(msg) {
+            console.log("Error:", msg)
+          }
         }
     }
 }

@@ -7,7 +7,7 @@ Rectangle {
     radius: 6
     color: controlColor
 
-    property string customFont: ""
+    property string customFont: "Josefin Sans"
     property string iconsrc: ""
     property string customText: ""
     property color normalColor: "#9f86ff"

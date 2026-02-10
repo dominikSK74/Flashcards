@@ -5,7 +5,6 @@
 
 static AndroidAuthService* g_googleAuthInstance = nullptr;
 
-// To ma być zawsze dostępne (żeby desktop build nie miał undefined reference)
 void AndroidAuthService::setInstanceForJni(AndroidAuthService* inst)
 {
     g_googleAuthInstance = inst;
