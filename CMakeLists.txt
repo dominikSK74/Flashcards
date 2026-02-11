@@ -38,6 +38,7 @@ qt_add_qml_module(appFlashcards
         QML_FILES components/+android/AppDrawer.qml
         QML_FILES components/+android/AppHeader.qml
         QML_FILES components/DrawerButton.qml
+        QML_FILES dashboard/+android/dashboard.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

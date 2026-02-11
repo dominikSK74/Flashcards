@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls.Fusion
-import "../components"
+import "../../components"
 
 Rectangle {
     anchors.fill: parent
@@ -23,12 +23,11 @@ Rectangle {
     }
 
     Rectangle {
-        width: parent.width - drawer.width
+        width: parent.width
         height: parent.height - header.width
         color: "#2b2b2e"
 
         anchors {
-            left: drawer.right
             top: header.bottom
         }
 
