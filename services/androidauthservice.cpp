@@ -22,6 +22,8 @@ AndroidAuthService::AndroidAuthService(Session* session, QObject *parent)
     m_googleWebClientId = settings.value("googleWebClientId").toString();
     m_firebaseApiKey = settings.value("firebaseApiKey").toString();
 
+    qDebug() << m_googleWebClientId;
+
     connect(this, &AndroidAuthService::idTokenReceived,
             this, [this](const QString& jwtIdToken) {
                 exchangeGoogleTokenToFirebase(jwtIdToken);

@@ -7,7 +7,17 @@ Rectangle {
     color: "#2b2b2e"
     property string appFont: "Josefin Sans"
 
-    AppHeader { id: header }
+    AppHeader {
+        id: header
+        textMsg: "Dashboard"
+        onMenuClicked: {
+            if (drawer.opened){
+                drawer.close();
+            }else{
+                drawer.open();
+            }
+        }
+    }
     AppDrawer { id: drawer }
 
     Rectangle {
