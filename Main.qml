@@ -20,7 +20,6 @@ ApplicationWindow {
         id: stackView
         anchors.fill: parent
         initialItem: "authorization/SignInForm.qml"
-        // initialItem: "dashboard/dashboard.qml"
 
         Connections {
             target: loginController
@@ -46,5 +45,13 @@ ApplicationWindow {
             console.log("Error:", msg)
           }
         }
+
+        Component.onCompleted: {
+            if (session.loggedIn) {
+                stackView.push("dashboard/dashboard.qml");
+                window.visibility = Window.Maximized;
+            }
+        }
+
     }
 }

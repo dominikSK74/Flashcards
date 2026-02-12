@@ -16,7 +16,6 @@ void FirebaseController::testConnection(){
     });
 
     connect(m_firebaseService, &FirebaseService::error, this, [this](QString msg) {
-        qDebug() << msg;
         emit logout();
     });
 

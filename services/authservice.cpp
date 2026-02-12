@@ -47,6 +47,7 @@ AuthService::AuthService(Session* session, QObject* parent) : QObject(parent), m
 
     connect(m_oauth, &QOAuth2AuthorizationCodeFlow::granted, this, [this] {
         const QString googleIdToken = m_oauth->idToken();
+
         if (googleIdToken.isEmpty()) {
             emit authFailed("No idToken from Google (idToken() is empty).");
             return;
@@ -121,4 +122,6 @@ void AuthService::startLoginProcedure() {
 
 void AuthService::logoutProcedure() {
     m_session->setToken("");
+    m_session->setUsername("");
+    m_session->setAvatarUrl("");
 }
