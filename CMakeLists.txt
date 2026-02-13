@@ -39,6 +39,10 @@ qt_add_qml_module(appFlashcards
         QML_FILES components/+android/AppHeader.qml
         QML_FILES components/DrawerButton.qml
         QML_FILES dashboard/+android/dashboard.qml
+        QML_FILES components/TileSet.qml
+        QML_FILES flashcards/FlashcardsDashboard.qml
+        SOURCES models/tilesetmodel.h models/tilesetmodel.cpp
+        SOURCES models/objects/tilesetobject.h models/objects/tilesetobject.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -24,7 +24,8 @@ ApplicationWindow {
         Connections {
             target: loginController
             function onBackToSignIn() {
-                stackView.pop(stackView.depth - 1)
+                stackView.clear()
+                stackView.push("authorization/SignInForm.qml")
             }
         }
 

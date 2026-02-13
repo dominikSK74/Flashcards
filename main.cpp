@@ -9,6 +9,7 @@
 #include <controllers/firebasecontroller.h>
 #include <services/androidauthservice.h>
 #include <QSslSocket>
+#include <models/tilesetmodel.h>
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +32,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("loginController", loginController);
     engine.rootContext()->setContextProperty("firebaseController", firebaseController);
     engine.rootContext()->setContextProperty("session", session);
+
+    qmlRegisterType<TileSetModel>("my.models", 1, 0, "TileSetModel");
 
     QObject::connect(
         &engine,

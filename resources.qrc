@@ -10,5 +10,8 @@
         <file>config.ini</file>
         <file>assets/logout-icon.svg</file>
         <file>assets/menu-icon.svg</file>
+        <file>assets/add-icon.svg</file>
+        <file>assets/delete-icon.svg</file>
+        <file>assets/edit-icon.svg</file>
     </qresource>
 </RCC>

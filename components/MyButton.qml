@@ -28,6 +28,8 @@ Rectangle {
             fillMode: Image.PreserveAspectFit
             width: 32
             height: 32
+            sourceSize.width: width
+            sourceSize.height: height
             anchors.verticalCenter: parent.verticalCenter
         }
 

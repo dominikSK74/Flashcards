@@ -29,8 +29,15 @@ Rectangle {
         }
 
         DrawerButton {
+            customText: "Dashboard"
+            btnWidth: root.width - 20
+            onClicked: stackView.push("../dashboard/dashboard.qml");
+        }
+
+        DrawerButton {
             customText: "Flashcards"
             btnWidth: root.width - 20
+            onClicked: stackView.push("../flashcards/FlashcardsDashboard.qml");
         }
 
         DrawerButton {
