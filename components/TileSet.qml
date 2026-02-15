@@ -15,7 +15,8 @@ Item {
     signal clicked();
 
     readonly property color specialColor: mouseArea.pressed ? pressedColor : mouseArea.containsMouse ? hoverColor: normalColor
-    readonly property color controlColor: mouseArea.pressed ? "#3800b8" : mouseArea.containsMouse ? darkTextColor: backgroundColor
+    readonly property color controlColor: mouseArea1.pressed ? "#3800b8" : mouseArea1.containsMouse ? darkTextColor: backgroundColor
+
 
     width: 200
     height: 200
@@ -86,6 +87,18 @@ Item {
 
         MouseArea {
             id: mouseArea
+            visible: isSpecial
+            anchors.fill: parent
+            hoverEnabled: true
+            z: 0
+            onClicked: {
+                stackView.push("../flashcards/SetCreator.qml")
+            }
+        }
+
+        MouseArea {
+            id: mouseArea1
+            visible: !isSpecial
             anchors.fill: parent
             hoverEnabled: true
             z: 0
