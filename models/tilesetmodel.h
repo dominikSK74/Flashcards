@@ -17,6 +17,7 @@ public:
         NameRole = Qt::UserRole+1,
         CountRole = Qt::UserRole+2,
         IsAddRole = Qt::UserRole +3,
+        IdRole = Qt::UserRole + 4,
     };
 
 private:

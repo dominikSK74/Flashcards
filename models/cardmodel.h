@@ -16,7 +16,18 @@ public:
     enum RoleNames {
         FrontRole = Qt::UserRole+1,
         BackRole = Qt::UserRole+2,
+
+
     };
+    Q_INVOKABLE void addEmptyCard();
+    Q_INVOKABLE void loadCardsFromDatabase(QString id_set);
+    Q_INVOKABLE void saveSet(QString id_set, QString setName);
+
+
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+
 
 private:
     QList<CardObject> m_list;

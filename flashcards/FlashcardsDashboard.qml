@@ -47,7 +47,13 @@ Rectangle {
                 title: name
                 value: count
                 isSpecial: isAdd
-                onClicked: console.log("tile clicked")
+                onClicked: console.log("Tile clicked: learn mode");
+                onEditClicked: {
+                    stackView.push("../flashcards/SetCreator.qml", {
+                        setName: name,
+                        setId: id
+                    })
+                }
             }
         }
     }

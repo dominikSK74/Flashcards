@@ -9,14 +9,13 @@ Rectangle {
     property string appFont: "Josefin Sans"
 
     property string setName: ""
-
-    //TODO: W CARD MODEL addEmptyCard, loadDataFromDatabse
+    property string setId: ""
 
     Component.onCompleted: {
-        if (setName === "") {
-            // CREATE MODE
+        if (setId === "") {
+            listview.model.addEmptyCard();
         } else {
-            // EDIT MODE
+            listview.model.loadCardsFromDatabase(setId);
         }
     }
 
@@ -55,8 +54,10 @@ Rectangle {
             anchors {
                 top: parent.top
                 left: parent.left
-                topMargin: 10
-                leftMargin: 10
+                right: parent.right
+                topMargin: 15
+                leftMargin: 20
+                rightMargin: 20
             }
 
 
@@ -65,6 +66,24 @@ Rectangle {
                 inputWidth: Math.min((parent.width / 2) - 20, 350)
                 label: "Set name"
                 text: setName
+            }
+
+            MyButton {
+                id: saveBtn
+                isIcon: false
+                customText: "Save set"
+                btnWidth: 150
+
+                anchors {
+                    right: headBox.right
+                    rightMargin: 15
+                    verticalCenter: parent.verticalCenter
+                }
+
+                onClicked: {
+                    listview.model.saveSet(setId, setNameInput.text);
+                    stackView.push("FlashcardsDashboard.qml");
+                }
             }
         }
 
@@ -82,9 +101,8 @@ Rectangle {
 
             model: CardModel {}
             delegate: CardInput {
-                frontText: front
-                backText: back
                 cardWidth: ListView.view.width
+
             }
 
         }
@@ -100,6 +118,7 @@ Rectangle {
             }
 
             iconsrc: "qrc:assets/add-icon.svg"
+            onClicked: listview.model.addEmptyCard();
 
         }
     }

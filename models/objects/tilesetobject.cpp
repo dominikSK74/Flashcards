@@ -2,7 +2,7 @@
 
 TileSetObject::TileSetObject() {}
 
-TileSetObject::TileSetObject(QString name, int count, bool isAdd) : name(name), count(count), isAdd(isAdd) {}
+TileSetObject::TileSetObject(QString name, int count, QString id, bool isAdd) : name(name), count(count), id(id), isAdd(isAdd) {}
 
 void TileSetObject::setName(QString name) { this->name = name; }
 
@@ -13,3 +13,6 @@ void TileSetObject::setCount(int count) { this->count = count; }
 int TileSetObject::getCount() { return this->count; };
 
 bool TileSetObject::isSpecial() { return isAdd; }
+
+void TileSetObject::setId(QString id) { this->id = id; }
+QString TileSetObject::getId() { return id; }

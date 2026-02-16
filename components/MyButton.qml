@@ -16,6 +16,7 @@ Rectangle {
     property color textColor: "#1a0056"
     property int btnWidth: 45
     property int btnHeight: 45
+    property bool isIcon: true
 
     readonly property color controlColor: mouseArea.pressed ? pressedColor : mouseArea.containsMouse ? hoverColor: normalColor
 
@@ -31,6 +32,7 @@ Rectangle {
             sourceSize.width: width
             sourceSize.height: height
             anchors.verticalCenter: parent.verticalCenter
+            visible: isIcon
         }
 
         Text {
