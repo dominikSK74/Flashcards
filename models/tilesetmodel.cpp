@@ -6,15 +6,6 @@ TileSetModel::TileSetModel(QObject *parent) : QAbstractListModel(parent) {
     m_roleNames[CountRole] = "count";
     m_roleNames[IsAddRole] = "isAdd";
     m_roleNames[IdRole] = "id";
-
-    //TestData
-    m_list.append(TileSetObject("Nazwa1", 10, "123"));
-    m_list.append(TileSetObject("Nazwa2", 20, "321"));
-    m_list.append(TileSetObject("Nazwa3", 33, "id"));
-    m_list.append(TileSetObject("Nazwa4", 49, "idddduid"));
-
-
-    m_list.append(TileSetObject("", 0,"", true));
 }
 
 int TileSetModel::rowCount(const QModelIndex &parent) const
@@ -50,3 +41,27 @@ QHash<int, QByteArray> TileSetModel::roleNames() const
 {
     return m_roleNames;
 }
+
+void TileSetModel::loadData(const QJsonDocument &data) {
+    QJsonObject root = data.object();
+    QJsonArray documents = root["documents"].toArray();
+
+    beginResetModel();
+    m_list.clear();
+
+    for (const QJsonValue& value : documents) {
+        QJsonObject doc = value.toObject();
+        QJsonObject fields = doc["fields"].toObject();
+
+        QString setName = fields["name"].toObject()["stringValue"].toString();
+        int count = fields["count"].toObject()["stringValue"].toString().toInt();
+        QString setId = doc["name"].toString().split("/").last();
+
+        m_list.append(TileSetObject(setName, count, setId));
+    }
+
+    m_list.append(TileSetObject("", 0, "", true));
+    endResetModel();
+}
+
+

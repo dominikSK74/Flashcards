@@ -3,10 +3,12 @@
 
 #include <QAbstractListModel>
 #include "objects/cardobject.h"
+#include "controllers/firebasecontroller.h"
 
 class CardModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
     explicit CardModel(QObject *parent = nullptr);
     virtual int rowCount(const QModelIndex &parent) const override;
@@ -21,13 +23,12 @@ public:
     };
     Q_INVOKABLE void addEmptyCard();
     Q_INVOKABLE void loadCardsFromDatabase(QString id_set);
-    Q_INVOKABLE void saveSet(QString id_set, QString setName);
-
+    Q_INVOKABLE void saveSet(QString id_set, QString setName, FirebaseController* firebaseController);
 
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
-
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
+    QJsonObject prepareCardsJsonBody(QString uuid, QString setId);
 
 private:
     QList<CardObject> m_list;

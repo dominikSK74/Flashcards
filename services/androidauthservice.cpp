@@ -103,6 +103,7 @@ void AndroidAuthService::exchangeGoogleTokenToFirebase(const QString &googleIdTo
         m_session->setUsername(obj.value("displayName").toString());
         m_session->setAvatarUrl(obj.value("photoUrl").toString());
         m_session->setToken(firebaseIdToken);
+        m_session->setUUID(obj.value("localId").toString());
         emit authSuccess();
     });
 

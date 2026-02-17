@@ -11,9 +11,11 @@ class FirebaseService : public QObject
     Q_OBJECT
 public:
     explicit FirebaseService(Session* session, QObject *parent = nullptr);
-    void sendGetRequest(QString url);
+    void sendGetRequest(QString url, QString operationName);
+    void sendPostRequest(QString url, QJsonObject body, QString operationName);
+    QString getUUID();
 signals:
-    void finished(QJsonDocument doc);
+    void finished(QJsonDocument doc, QString operationName);
     void error(QString msg);
 
 private:

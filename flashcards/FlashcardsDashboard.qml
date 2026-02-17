@@ -42,7 +42,9 @@ Rectangle {
             cellWidth: 220
             cellHeight: 220
 
-            model: TileSetModel {}
+            model: TileSetModel {
+                id: tileSetModel
+            }
             delegate: TileSet{
                 title: name
                 value: count
@@ -55,6 +57,20 @@ Rectangle {
                     })
                 }
             }
+
+
+            Component.onCompleted: {
+                firebaseController.loadSets();
+            }
         }
+
+
+        Connections {
+            target: firebaseController
+            function onSetsLoaded(data) {
+                tileSetModel.loadData(data)
+            }
+        }
+
     }
 }

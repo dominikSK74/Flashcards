@@ -81,8 +81,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    listview.model.saveSet(setId, setNameInput.text);
-                    stackView.push("FlashcardsDashboard.qml");
+                    listview.model.saveSet(setId, setNameInput.text, firebaseController);
                 }
             }
         }
@@ -99,7 +98,9 @@ Rectangle {
 
             spacing: 20
 
-            model: CardModel {}
+            model: CardModel {
+                id: cardModel
+            }
             delegate: CardInput {
                 cardWidth: ListView.view.width
 
@@ -120,6 +121,13 @@ Rectangle {
             iconsrc: "qrc:assets/add-icon.svg"
             onClicked: listview.model.addEmptyCard();
 
+        }
+    }
+
+    Connections {
+        target: firebaseController
+        function onAddingSetCompleted(data) {
+            stackView.push("FlashcardsDashboard.qml");
         }
     }
 }

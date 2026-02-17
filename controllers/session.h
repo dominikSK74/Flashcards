@@ -10,6 +10,7 @@ class Session : public QObject
     Q_PROPERTY(QString token READ token NOTIFY tokenChanged);
     Q_PROPERTY(QString username READ username NOTIFY usernameChanged);
     Q_PROPERTY(QString avatarUrl READ avatarUrl NOTIFY avatarUrlChanged);
+    Q_PROPERTY(QString uuid READ uuid NOTIFY uuidChanged);
     Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
 public:
     explicit Session(QObject *parent = nullptr);
@@ -18,6 +19,9 @@ public:
 
     void setUsername(const QString &username);
     QString username() const;
+
+    void setUUID(const QString &uuid);
+    QString uuid() const;
 
     void setAvatarUrl(const QString &avatarUrl);
     QString avatarUrl() const;
@@ -29,11 +33,13 @@ signals:
     void usernameChanged();
     void avatarUrlChanged();
     void loggedInChanged();
+    void uuidChanged();
 
 private:
     QString m_token;
     QString m_username;
     QString m_avatarUrl;
+    QString m_uuid;
     QSettings m_settings;
 };
 

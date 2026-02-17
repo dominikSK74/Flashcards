@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "objects/tilesetobject.h"
+#include "../services/firebaseservice.h"
 
 class TileSetModel : public QAbstractListModel
 {
@@ -19,6 +20,8 @@ public:
         IsAddRole = Qt::UserRole +3,
         IdRole = Qt::UserRole + 4,
     };
+
+    Q_INVOKABLE void loadData(const QJsonDocument &data);
 
 private:
     QList<TileSetObject> m_list;

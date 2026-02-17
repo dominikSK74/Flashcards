@@ -1,4 +1,5 @@
 #include "cardmodel.h"
+#include <QJsonObject>
 
 CardModel::CardModel(QObject *parent)
     : QAbstractListModel{parent}
@@ -65,33 +66,8 @@ void CardModel::loadCardsFromDatabase(QString id_set) {
 
 }
 
-void CardModel::saveSet(QString id_set, QString setName){
-
-    if(id_set.isEmpty()){
-        // Nowy set
-        qDebug() << "Dodaje nowy set " << setName;
-        for(int i = 0; i < m_list.size(); i++){
-
-            qDebug() << m_list.at(i).getFront()
-            << " "
-            << m_list.at(i).getBack();
-
-        }
-
-    }else {
-        // Aktualizujemy set
-        qDebug() << "Aktualizuje set " << setName << "id:" << id_set;
-        for(int i = 0; i < m_list.size(); i++){
-
-            qDebug() << m_list.at(i).getFront()
-            << " "
-            << m_list.at(i).getBack();
-
-        }
-
-        //TODO: aktualizacja qml->cpp
-    }
-
+void CardModel::saveSet(QString id_set, QString setName, FirebaseController* firebaseController){
+    firebaseController->saveSet(id_set, setName, m_list);
 }
 
 
@@ -129,4 +105,8 @@ bool CardModel::setData(const QModelIndex &index,
     emit dataChanged(index, index, { role });
     return true;
 }
+
+
+
+
 

@@ -8,6 +8,7 @@ Session::Session(QObject *parent)
         setToken(m_settings.value("token").toString());
         setUsername(m_settings.value("username").toString());
         setAvatarUrl(m_settings.value("avatarUrl").toString());
+        setUUID(m_settings.value("uuid").toString());
     }
 }
 
@@ -41,6 +42,17 @@ void Session::setAvatarUrl(const QString &avatarUrl) {
 
 QString Session::avatarUrl() const {
     return m_avatarUrl;
+}
+
+void Session::setUUID(const QString &uuid) {
+    m_uuid = uuid;
+    QSettings settings("userdata.ini", QSettings::IniFormat);
+    settings.setValue("uuid", uuid);
+    emit uuidChanged();
+}
+
+QString Session::uuid() const {
+    return m_uuid;
 }
 
 bool Session::loggedIn() const { return !m_token.isEmpty(); }
