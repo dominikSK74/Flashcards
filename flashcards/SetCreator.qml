@@ -10,12 +10,13 @@ Rectangle {
 
     property string setName: ""
     property string setId: ""
+    property var jsonData: ({})
 
     Component.onCompleted: {
         if (setId === "") {
             listview.model.addEmptyCard();
         } else {
-            listview.model.loadCardsFromDatabase(setId);
+            firebaseController.loadCards(setId);
         }
     }
 
@@ -81,7 +82,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    listview.model.saveSet(setId, setNameInput.text, firebaseController);
+                    listview.model.saveSet(setId, setNameInput.text, firebaseController, jsonData);
                 }
             }
         }
@@ -105,7 +106,6 @@ Rectangle {
                 cardWidth: ListView.view.width
 
             }
-
         }
 
         MyButton {
@@ -128,6 +128,14 @@ Rectangle {
         target: firebaseController
         function onAddingSetCompleted(data) {
             stackView.push("FlashcardsDashboard.qml");
+        }
+    }
+
+    Connections {
+        target: firebaseController
+        function onCardsLoaded(data) {
+            cardModel.loadCards(data);
+            jsonData = data;
         }
     }
 }

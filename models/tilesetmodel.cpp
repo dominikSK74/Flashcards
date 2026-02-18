@@ -57,10 +57,21 @@ void TileSetModel::loadData(const QJsonDocument &data) {
         int count = fields["count"].toObject()["stringValue"].toString().toInt();
         QString setId = doc["name"].toString().split("/").last();
 
-        m_list.append(TileSetObject(setName, count, setId));
+        QString timestampString = fields["createdAt"].toObject()["timestampValue"].toString();
+
+        QDateTime createdAt = QDateTime::fromString(timestampString, Qt::ISODate);
+        createdAt.setTimeZone(QTimeZone::utc());
+
+
+        m_list.append(TileSetObject(setName, count, setId, createdAt));
     }
 
-    m_list.append(TileSetObject("", 0, "", true));
+    std::sort(m_list.begin(), m_list.end(), [](const TileSetObject &a, const TileSetObject &b) {
+        return a.getCreatedTime() > b.getCreatedTime();
+    });
+
+
+    m_list.append(TileSetObject("", 0, "", QDateTime(), true));
     endResetModel();
 }
 

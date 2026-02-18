@@ -22,8 +22,8 @@ public:
 
     };
     Q_INVOKABLE void addEmptyCard();
-    Q_INVOKABLE void loadCardsFromDatabase(QString id_set);
-    Q_INVOKABLE void saveSet(QString id_set, QString setName, FirebaseController* firebaseController);
+    Q_INVOKABLE void loadCards(QJsonDocument doc);
+    Q_INVOKABLE void saveSet(QString id_set, QString setName, FirebaseController* firebaseController, QVariant data);
 
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;

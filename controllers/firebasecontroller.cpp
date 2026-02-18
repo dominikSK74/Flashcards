@@ -12,6 +12,9 @@ FirebaseController::FirebaseController(FirebaseService* firebaseService, QObject
         if(operationName == "loadSets"){
             emit setsLoaded(doc);
         }
+        if(operationName == "loadCards"){
+            emit cardsLoaded(doc);
+        }
 
 
     });
@@ -51,7 +54,7 @@ void FirebaseController::loadSets() {
     m_firebaseService->sendGetRequest(url, "loadSets");
 }
 
-void FirebaseController::saveSet(QString setId, QString setName, QList<CardObject> list){
+void FirebaseController::saveSet(QString setId, QString setName, QList<CardObject> list, QJsonDocument doc){
     QSettings settings(":config.ini", QSettings::IniFormat);
     QString projectId = settings.value("firebaseProjectId").toString();
 
@@ -60,7 +63,7 @@ void FirebaseController::saveSet(QString setId, QString setName, QList<CardObjec
         QString setId = QUuid::createUuid().toString(QUuid::WithoutBraces);
         QJsonObject setFields;
         QJsonObject setBody;
-        QString timestamp = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+
 
         setFields["name"] = QJsonObject{
             { "stringValue", setName }
@@ -72,7 +75,7 @@ void FirebaseController::saveSet(QString setId, QString setName, QList<CardObjec
 
         setFields["createdAt"] = QJsonObject{
             { "timestampValue",
-             timestamp }
+             QDateTime::currentDateTimeUtc().toString(Qt::ISODate) }
         };
 
         setBody["fields"] = setFields;
@@ -91,19 +94,40 @@ void FirebaseController::saveSet(QString setId, QString setName, QList<CardObjec
         qDebug() << "Aktualizuje set " << setName << "id:" << setId;
         for(int i = 0; i < list.size(); i++){
 
-            qDebug() << list.at(i).getFront()
+              qDebug() << list.at(i).getFront()
             << " "
             << list.at(i).getBack();
 
         }
 
+        //PATCH SETNAME
+        QJsonObject setNameFields;
+        QJsonObject setNameBody;
+        setNameFields.insert("name", QJsonObject{{ "stringValue", setName }});
+        setNameFields.insert("count", QJsonObject{{ "stringValue", QString::number(list.size()) }});
+        setNameBody.insert("fields", setNameFields);
+
+        QString url = QString(
+            "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3?updateMask.fieldPaths=name&updateMask.fieldPaths=count"
+            ).arg(projectId, m_firebaseService->getUUID(), setId);
+
+        m_firebaseService->sendPatchRequest(url, setNameBody, "");
+
+        //DELETING
+        QJsonObject deleteBody = prepareDeleteCardsJsonBody(doc);
+        QString deleteUrl = QString("https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents:commit").arg(projectId);
+        m_firebaseService->sendPostRequest(deleteUrl, deleteBody, "");
+
+        //ADDING
+        QJsonObject cardsBody = prepareCardsJsonBody(m_firebaseService->getUUID(), setId, list);
+        QString addCardsUrl = QString("https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents:commit").arg(projectId);
+        m_firebaseService->sendPostRequest(addCardsUrl, cardsBody, "addNewSet");
     }
 }
 
 QJsonObject FirebaseController::prepareCardsJsonBody(QString uuid, QString setId, QList<CardObject> list) {
     QJsonObject cardsBody;
     QJsonArray writes;
-    QString timestamp = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
     QSettings settings(":config.ini", QSettings::IniFormat);
     QString projectId = settings.value("firebaseProjectId").toString();
 
@@ -116,16 +140,20 @@ QJsonObject FirebaseController::prepareCardsJsonBody(QString uuid, QString setId
         QJsonObject created;
         QJsonObject fields;
         QJsonObject precond;
+        QJsonObject index;
+
         update.insert("name",
                       QString("projects/%1/databases/(default)/documents/users/%2/sets/%3/cards/%4")
                           .arg(projectId, m_firebaseService->getUUID(), setId, cardId));
 
         front.insert("stringValue", list.at(i).getFront());
         back.insert("stringValue", list.at(i).getBack());
-        created.insert("timestampValue", timestamp);
+        created.insert("timestampValue", QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+        index.insert("stringValue", QString::number(i));
 
         fields.insert("front", front);
         fields.insert("back", back);
+        fields.insert("index", index);
         fields.insert("createdAt", created);
 
         update.insert("fields", fields);
@@ -138,4 +166,42 @@ QJsonObject FirebaseController::prepareCardsJsonBody(QString uuid, QString setId
 
     cardsBody.insert("writes", writes);
     return cardsBody;
+}
+
+void FirebaseController::loadCards(QString setId) {
+
+    QSettings settings(":config.ini", QSettings::IniFormat);
+    QString projectId = settings.value("firebaseProjectId").toString();
+    QString userUuid = m_firebaseService->getUUID();
+
+
+    QString url = QString(
+        "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3/cards"
+        ).arg(projectId, userUuid, setId);
+
+    m_firebaseService->sendGetRequest(url, "loadCards");
+}
+
+QJsonObject FirebaseController::prepareDeleteCardsJsonBody(QJsonDocument doc){
+    QJsonObject body;
+    QJsonArray writes;
+
+    QJsonObject rootObj = doc.object();
+    QJsonArray documents = rootObj["documents"].toArray();
+
+    for (const QJsonValue &docVal : documents) {
+        QJsonObject docObj = docVal.toObject();
+
+        QString documentName = docObj["name"].toString();
+
+        if (documentName.isEmpty())
+            continue;
+
+        QJsonObject write;
+        write.insert("delete", documentName);
+        writes.append(write);
+    }
+
+    body.insert("writes", writes);
+    return body;
 }

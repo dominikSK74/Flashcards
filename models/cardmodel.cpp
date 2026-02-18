@@ -44,30 +44,40 @@ void CardModel::addEmptyCard() {
     endInsertRows();
 }
 
-void CardModel::loadCardsFromDatabase(QString id_set) {
+void CardModel::loadCards(QJsonDocument doc) {
 
-    // ZAPYTANIE DO BAZY O ID SET, TOKEN JEST W SESSION
-    qDebug() << "Pobieram dane dla zestawu o id: " << id_set;
-
-    //Fake data
+    QJsonObject rootObj = doc.object();
 
     beginResetModel();
     m_list.clear();
 
-    m_list.append(CardObject("test1", "test2"));
-    m_list.append(CardObject("test2", "test2"));
-    m_list.append(CardObject("test3", "test2"));
-    m_list.append(CardObject("test4", "test2"));
-    m_list.append(CardObject("test5", "test2"));
-    m_list.append(CardObject("test6", "test2"));
-    m_list.append(CardObject("test7", "test2"));
+    QJsonArray documents = rootObj["documents"].toArray();
+
+    for (const QJsonValue &docVal : documents) {
+        QJsonObject docObj = docVal.toObject();
+        QJsonObject fields = docObj["fields"].toObject();
+
+        QString front = fields["front"].toObject()["stringValue"].toString();
+        QString back = fields["back"].toObject()["stringValue"].toString();
+        QString timestampString = fields["createdAt"].toObject()["timestampValue"].toString();
+
+        QDateTime createdAt = QDateTime::fromString(timestampString, Qt::ISODate);
+        createdAt.setTimeZone(QTimeZone::utc());
+        int index = fields["index"].toObject()["stringValue"].toString().toInt();
+
+        m_list.append(CardObject(front, back, createdAt, index));
+    }
+
+    std::sort(m_list.begin(), m_list.end(), [](const CardObject &a, const CardObject &b) {
+        return a.getIndex() < b.getIndex();
+    });
 
     endResetModel();
-
 }
 
-void CardModel::saveSet(QString id_set, QString setName, FirebaseController* firebaseController){
-    firebaseController->saveSet(id_set, setName, m_list);
+void CardModel::saveSet(QString id_set, QString setName, FirebaseController* firebaseController, QVariant data){
+    QJsonDocument doc = QJsonDocument::fromVariant(data);
+    firebaseController->saveSet(id_set, setName, m_list, doc);
 }
 
 
@@ -105,6 +115,8 @@ bool CardModel::setData(const QModelIndex &index,
     emit dataChanged(index, index, { role });
     return true;
 }
+
+
 
 
 

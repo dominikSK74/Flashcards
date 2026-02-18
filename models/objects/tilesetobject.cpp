@@ -2,7 +2,8 @@
 
 TileSetObject::TileSetObject() {}
 
-TileSetObject::TileSetObject(QString name, int count, QString id, bool isAdd) : name(name), count(count), id(id), isAdd(isAdd) {}
+TileSetObject::TileSetObject(QString name, int count, QString id, QDateTime createdTime, bool isAdd)
+    : name(name), count(count), id(id), isAdd(isAdd), createdTime(createdTime) {}
 
 void TileSetObject::setName(QString name) { this->name = name; }
 
@@ -16,3 +17,6 @@ bool TileSetObject::isSpecial() { return isAdd; }
 
 void TileSetObject::setId(QString id) { this->id = id; }
 QString TileSetObject::getId() { return id; }
+
+QDateTime TileSetObject::getCreatedTime() const { return createdTime; }
+void TileSetObject::setCreatedTime(QDateTime createdTime){ this->createdTime = createdTime; }

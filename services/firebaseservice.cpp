@@ -51,9 +51,41 @@ void FirebaseService::sendPostRequest(QString url, QJsonObject body, QString ope
     request.setRawHeader("Authorization",
                          ("Bearer " + m_session->token()).toUtf8());
 
-    // m_networkAccessManager.post(request, QJsonDocument(body).toJson());
-
     QNetworkReply* reply = m_networkAccessManager.post(request, QJsonDocument(body).toJson());
+
+    connect(reply, &QNetworkReply::finished, this, [reply, this, operationName]{
+        if (reply->error() != QNetworkReply::NoError) {
+            emit error(reply->errorString());
+            reply->deleteLater();
+            return;
+        }
+
+        QByteArray response = reply->readAll();
+
+        reply->deleteLater();
+
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(response, &parseError);
+
+        if (parseError.error != QJsonParseError::NoError) {
+            emit error(parseError.errorString());
+            return;
+        }
+        emit finished(doc, operationName);
+    });
+}
+
+void FirebaseService::sendPatchRequest(QString url, QJsonObject body, QString operationName){
+
+    QNetworkRequest request{ QUrl(url) };
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Authorization",
+                         ("Bearer " + m_session->token()).toUtf8());
+
+    QByteArray payload = QJsonDocument(body).toJson();
+    QNetworkReply *reply =
+        m_networkAccessManager.sendCustomRequest(request, "PATCH", payload);
+
 
     connect(reply, &QNetworkReply::finished, this, [reply, this, operationName]{
         if (reply->error() != QNetworkReply::NoError) {
