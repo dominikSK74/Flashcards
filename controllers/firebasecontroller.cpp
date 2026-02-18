@@ -15,6 +15,15 @@ FirebaseController::FirebaseController(FirebaseService* firebaseService, QObject
         if(operationName == "loadCards"){
             emit cardsLoaded(doc);
         }
+        if(operationName == "deleteSet"){
+            emit deleteSetCompleted();
+        }
+        if(operationName == "downloadCards"){
+            emit deleteCardsLoaded(doc);
+        }
+        if(operationName == "deleteCardsDone"){
+            emit deleteCardsDone();
+        }
 
 
     });
@@ -204,4 +213,34 @@ QJsonObject FirebaseController::prepareDeleteCardsJsonBody(QJsonDocument doc){
 
     body.insert("writes", writes);
     return body;
+}
+
+void FirebaseController::deleteSet(QString setId) {
+    QSettings settings(":config.ini", QSettings::IniFormat);
+    QString projectId = settings.value("firebaseProjectId").toString();
+    QString userUuid = m_firebaseService->getUUID();
+
+    // DOWNLOAD CARDS FROM SET
+    QString url = QString(
+                      "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3/cards"
+                      ).arg(projectId, userUuid, setId);
+
+    m_firebaseService->sendGetRequest(url, "downloadCards");
+
+    // DELETE CARDS
+    connect(this, &FirebaseController::deleteCardsLoaded, this, [this, projectId](const QJsonDocument& doc) {
+        QJsonObject deleteBody = prepareDeleteCardsJsonBody(doc);
+        QString deleteUrl = QString("https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents:commit").arg(projectId);
+        m_firebaseService->sendPostRequest(deleteUrl, deleteBody, "deleteCardsDone");
+    });
+
+    // DELETE SET
+    connect(this, &FirebaseController::deleteCardsDone, this, [this, projectId, setId]() {
+
+        QString url = QString(
+            "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3"
+            ).arg(projectId, m_firebaseService->getUUID(), setId);
+
+        m_firebaseService->sendDeleteRequest(url, "deleteSet");
+    });
 }

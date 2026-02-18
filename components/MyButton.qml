@@ -5,7 +5,7 @@ Rectangle {
     width: btnWidth
     height: btnHeight
     radius: 6
-    color: controlColor
+    color: isDisabled ? "#3b3b3f" : controlColor
 
     property string customFont: "Josefin Sans"
     property string iconsrc: ""
@@ -17,6 +17,7 @@ Rectangle {
     property int btnWidth: 45
     property int btnHeight: 45
     property bool isIcon: true
+    property bool isDisabled: false
 
     readonly property color controlColor: mouseArea.pressed ? pressedColor : mouseArea.containsMouse ? hoverColor: normalColor
 
@@ -51,7 +52,9 @@ Rectangle {
         hoverEnabled: true
 
         onClicked: {
-            root.clicked()
+            if(!isDisabled){
+                root.clicked()
+            }
         }
     }
 }

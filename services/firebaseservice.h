@@ -14,6 +14,7 @@ public:
     void sendGetRequest(QString url, QString operationName);
     void sendPostRequest(QString url, QJsonObject body, QString operationName);
     void sendPatchRequest(QString url, QJsonObject body, QString operationName);
+    void sendDeleteRequest(QString url, QString operationName);
     QString getUUID();
 signals:
     void finished(QJsonDocument doc, QString operationName);

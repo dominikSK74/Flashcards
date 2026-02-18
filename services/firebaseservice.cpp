@@ -112,3 +112,34 @@ void FirebaseService::sendPatchRequest(QString url, QJsonObject body, QString op
 QString FirebaseService::getUUID() {
     return m_session->uuid();
 }
+
+void FirebaseService::sendDeleteRequest(QString url, QString operationName){
+
+    QNetworkRequest request{ QUrl(url) };
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Authorization",
+                         ("Bearer " + m_session->token()).toUtf8());
+
+    QNetworkReply* reply = m_networkAccessManager.deleteResource(request);
+
+    connect(reply, &QNetworkReply::finished, this, [reply, this, operationName]{
+        if (reply->error() != QNetworkReply::NoError) {
+            emit error(reply->errorString());
+            reply->deleteLater();
+            return;
+        }
+
+        QByteArray response = reply->readAll();
+
+        reply->deleteLater();
+
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(response, &parseError);
+
+        if (parseError.error != QJsonParseError::NoError) {
+            emit error(parseError.errorString());
+            return;
+        }
+        emit finished(doc, operationName);
+    });
+}

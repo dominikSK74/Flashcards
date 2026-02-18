@@ -50,6 +50,7 @@ qt_add_qml_module(appFlashcards
         QML_FILES components/MyTextArea.qml
         SOURCES models/objects/cardobject.h models/objects/cardobject.cpp
         SOURCES models/cardmodel.h models/cardmodel.cpp
+        QML_FILES components/DeleteDialog.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

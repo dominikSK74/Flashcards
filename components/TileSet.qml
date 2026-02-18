@@ -14,6 +14,7 @@ Item {
     property color pressedColor: "#9380d8"
     signal clicked();
     signal editClicked();
+    signal deleteClicked();
 
     readonly property color specialColor: mouseArea.pressed ? pressedColor : mouseArea.containsMouse ? hoverColor: normalColor
     readonly property color controlColor: mouseArea1.pressed ? "#3800b8" : mouseArea1.containsMouse ? darkTextColor: backgroundColor
@@ -65,7 +66,7 @@ Item {
 
                 MyButton {
                     iconsrc: "qrc:assets/delete-icon.svg"
-                    onClicked: console.log("btn delete")
+                    onClicked: root.deleteClicked();
                 }
             }
 

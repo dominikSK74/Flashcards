@@ -17,12 +17,16 @@ public:
     QJsonObject prepareCardsJsonBody(QString uuid, QString setId, QList<CardObject> list);
     QJsonObject prepareDeleteCardsJsonBody(QJsonDocument doc);
     Q_INVOKABLE void loadCards(QString setId);
+    Q_INVOKABLE void deleteSet(QString setId);
 
 signals:
     void logout();
     void setsLoaded(const QJsonDocument &data);
     void addingSetCompleted();
     void cardsLoaded(const QJsonDocument &data);
+    void deleteSetCompleted();
+    void deleteCardsLoaded(const QJsonDocument &data);
+    void deleteCardsDone();
 
 private:
     FirebaseService* m_firebaseService;
