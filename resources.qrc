@@ -14,5 +14,14 @@
         <file>assets/delete-icon.svg</file>
         <file>assets/edit-icon.svg</file>
         <file>assets/remove-icon.svg</file>
+        <file>assets/csv-icon.svg</file>
+        <file>assets/b-close-icon.svg</file>
+        <file>assets/blue-close-icon.svg</file>
+        <file>assets/error-icon.svg</file>
+        <file>assets/g-close-icon.svg</file>
+        <file>assets/info-icon.svg</file>
+        <file>assets/r-close-icon.svg</file>
+        <file>assets/success-icon.svg</file>
+        <file>assets/warning-icon.svg</file>
     </qresource>
 </RCC>

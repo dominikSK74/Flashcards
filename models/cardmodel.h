@@ -25,10 +25,13 @@ public:
     Q_INVOKABLE void loadCards(QJsonDocument doc);
     Q_INVOKABLE void saveSet(QString id_set, QString setName, FirebaseController* firebaseController, QVariant data);
     Q_INVOKABLE void removeCard(int index);
+    Q_INVOKABLE void importCardsFromCSV(QString filePath);
 
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
+signals:
+    void sendAlert(QString type, QString message);
 
 private:
     QList<CardObject> m_list;

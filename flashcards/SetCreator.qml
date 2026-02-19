@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls.Fusion
 import "../components"
 import my.models 1.0
+import QtQuick.Dialogs
 
 Rectangle {
     anchors.fill: parent
@@ -85,6 +86,21 @@ Rectangle {
                     listview.model.saveSet(setId, setNameInput.text, firebaseController, jsonData);
                 }
             }
+
+            MyButton {
+                id: importBtn
+                iconsrc: "qrc:assets/csv-icon.svg"
+
+                anchors {
+                    right: saveBtn.left
+                    rightMargin: 15
+                    verticalCenter: parent.verticalCenter
+                }
+
+                onClicked: {
+                    fileDialog.open();
+                }
+            }
         }
 
         ListView {
@@ -124,6 +140,17 @@ Rectangle {
             onClicked: listview.model.addEmptyCard();
 
         }
+
+        Alert {
+            id: alert
+            visible: false
+            type: "warning"
+            message: ""
+            onClicked: {
+                alert.visible = false
+                closeAlertTimer.restart();
+            }
+        }
     }
 
     Connections {
@@ -138,6 +165,37 @@ Rectangle {
         function onCardsLoaded(data) {
             cardModel.loadCards(data);
             jsonData = data;
+        }
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Choose csv file"
+        nameFilters: ["Pliki CSV (*.csv)", "Wszystkie pliki (*)"]
+        fileMode: FileDialog.OpenFile
+        currentFolder: shortcuts.home
+
+        onAccepted: {
+            cardModel.importCardsFromCSV(fileDialog.selectedFile)
+        }
+    }
+
+    Timer {
+        id: closeAlertTimer
+        interval: 5000
+        repeat: false
+        onTriggered: {
+            alert.visible = false
+        }
+    }
+
+    Connections {
+        target: cardModel
+        function onSendAlert(type, message) {
+            alert.type = type
+            alert.message = message
+            alert.visible = true
+            closeAlertTimer.start();
         }
     }
 }

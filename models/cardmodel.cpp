@@ -130,6 +130,32 @@ void CardModel::removeCard(int index){
     endResetModel();
 }
 
+void CardModel::importCardsFromCSV(QString filePath) {
+    QUrl url(filePath);
+
+    QFile file(url.toLocalFile());
+
+    if (!file.exists()) {
+        emit sendAlert("error", "Error: File does not exist at: " + url.toLocalFile());
+        return;
+    }
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        emit sendAlert("error", "Error: Could not open file for reading.");
+        return;
+    }
+
+    emit sendAlert("success", "Open file success!");
+
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        qDebug() << "Line:" << line;
+    }
+
+    file.close();
+}
 
 
 
