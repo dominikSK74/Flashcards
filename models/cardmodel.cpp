@@ -76,7 +76,7 @@ void CardModel::loadCards(QJsonDocument doc) {
 }
 
 void CardModel::saveSet(QString id_set, QString setName, FirebaseController* firebaseController, QVariant data){
-    QJsonDocument doc = QJsonDocument::fromVariant(data);
+    QJsonDocument doc = data.value<QJsonDocument>();
     firebaseController->saveSet(id_set, setName, m_list, doc);
 }
 

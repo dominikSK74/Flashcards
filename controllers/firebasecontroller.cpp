@@ -109,6 +109,11 @@ void FirebaseController::saveSet(QString setId, QString setName, QList<CardObjec
 
         }
 
+        //DELETING
+        QJsonObject deleteBody = prepareDeleteCardsJsonBody(doc);
+        QString deleteUrl = QString("https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents:commit").arg(projectId);
+        m_firebaseService->sendPostRequest(deleteUrl, deleteBody, "");
+
         //PATCH SETNAME
         QJsonObject setNameFields;
         QJsonObject setNameBody;
@@ -117,15 +122,10 @@ void FirebaseController::saveSet(QString setId, QString setName, QList<CardObjec
         setNameBody.insert("fields", setNameFields);
 
         QString url = QString(
-            "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3?updateMask.fieldPaths=name&updateMask.fieldPaths=count"
-            ).arg(projectId, m_firebaseService->getUUID(), setId);
+                          "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3?updateMask.fieldPaths=name&updateMask.fieldPaths=count"
+                          ).arg(projectId, m_firebaseService->getUUID(), setId);
 
         m_firebaseService->sendPatchRequest(url, setNameBody, "");
-
-        //DELETING
-        QJsonObject deleteBody = prepareDeleteCardsJsonBody(doc);
-        QString deleteUrl = QString("https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents:commit").arg(projectId);
-        m_firebaseService->sendPostRequest(deleteUrl, deleteBody, "");
 
         //ADDING
         QJsonObject cardsBody = prepareCardsJsonBody(m_firebaseService->getUUID(), setId, list);
