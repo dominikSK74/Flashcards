@@ -13,5 +13,6 @@
         <file>assets/add-icon.svg</file>
         <file>assets/delete-icon.svg</file>
         <file>assets/edit-icon.svg</file>
+        <file>assets/remove-icon.svg</file>
     </qresource>
 </RCC>

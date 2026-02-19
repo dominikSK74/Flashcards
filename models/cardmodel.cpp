@@ -116,6 +116,19 @@ bool CardModel::setData(const QModelIndex &index,
     return true;
 }
 
+void CardModel::removeCard(int index){
+    QList<CardObject> newList;
+
+    for(int i = 0; i < m_list.size(); i++){
+        if(i != index){
+            newList.append(m_list[i]);
+        }
+    }
+    beginResetModel();
+    m_list.clear();
+    m_list = newList;
+    endResetModel();
+}
 
 
 

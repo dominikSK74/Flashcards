@@ -104,7 +104,9 @@ Rectangle {
             }
             delegate: CardInput {
                 cardWidth: ListView.view.width
-
+                onRemoveClicked: {
+                    cardModel.removeCard(index);
+                }
             }
         }
 
