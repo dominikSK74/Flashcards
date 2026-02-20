@@ -147,14 +147,29 @@ void CardModel::importCardsFromCSV(QString filePath) {
 
     emit sendAlert("success", "Open file success!");
 
-
+    QList<CardObject> cards;
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
         qDebug() << "Line:" << line;
-    }
+        QList<QString> list = line.split(";");
 
+        if(list.size() != 2){
+            emit sendAlert("error", "Error: Bad format of file!");
+            return;
+        }
+
+        CardObject card;
+        card.setFront(list[0]);
+        card.setBack(list[1]);
+        cards.append(card);
+    }
     file.close();
+    beginResetModel();
+    m_list.clear();
+    m_list = cards;
+    endResetModel();
+    emit sendAlert("success", "The file has been imported correctly.");
 }
 
 

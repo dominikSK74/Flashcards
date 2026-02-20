@@ -50,7 +50,7 @@ Rectangle {
                 title: name
                 value: count
                 isSpecial: isAdd
-                onClicked: console.log("Tile clicked: learn mode");
+                onClicked: stackView.push("../flashcards/LearningMode.qml")
                 onEditClicked: {
                     stackView.push("../flashcards/SetCreator.qml", {
                         setName: name,
