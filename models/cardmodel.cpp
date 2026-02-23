@@ -45,7 +45,6 @@ void CardModel::addEmptyCard() {
 }
 
 void CardModel::loadCards(QJsonDocument doc) {
-
     QJsonObject rootObj = doc.object();
 
     beginResetModel();
@@ -170,6 +169,18 @@ void CardModel::importCardsFromCSV(QString filePath) {
     m_list = cards;
     endResetModel();
     emit sendAlert("success", "The file has been imported correctly.");
+}
+
+
+QVariantMap CardModel::get(int row) const
+{
+    QVariantMap map;
+    if (row < 0 || row >= m_list.size())
+        return map;
+
+    map.insert("front", m_list.at(row).getFront());
+    map.insert("back", m_list.at(row).getBack());
+    return map;
 }
 
 

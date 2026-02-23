@@ -50,7 +50,9 @@ Rectangle {
                 title: name
                 value: count
                 isSpecial: isAdd
-                onClicked: stackView.push("../flashcards/LearningMode.qml")
+                onClicked: stackView.push("../flashcards/LearningMode.qml",{
+                                setId: id
+                            })
                 onEditClicked: {
                     stackView.push("../flashcards/SetCreator.qml", {
                         setName: name,
