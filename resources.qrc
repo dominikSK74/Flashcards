@@ -23,5 +23,6 @@
         <file>assets/r-close-icon.svg</file>
         <file>assets/success-icon.svg</file>
         <file>assets/warning-icon.svg</file>
+        <file>assets/check-icon.svg</file>
     </qresource>
 </RCC>

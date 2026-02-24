@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void removeCard(int index);
     Q_INVOKABLE void importCardsFromCSV(QString filePath);
     Q_INVOKABLE QVariantMap get(int row) const;
+    Q_INVOKABLE void addCard(QString front, QString back);
 
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;

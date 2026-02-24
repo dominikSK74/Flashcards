@@ -11,6 +11,8 @@ Rectangle {
     property string appFont: "Josefin Sans"
     property string setId: ""
     property int currentIndex: 0
+    property int learned: 0
+    property int needRepeated: 0
 
     AppHeader {
         id: header
@@ -49,6 +51,27 @@ Rectangle {
                 cardLoader.item.nextCard.connect(function() {
                     currentIndex++;
                 });
+
+                cardLoader.item.viewSummary.connect(function() {
+                    console.log("Wchodz");
+                    // summaryAnim.start();
+                });
+            }
+        }
+
+        Rectangle {
+            id: summary
+            color: "#212224"
+            anchors.centerIn: parent
+            width: parent.width * 0.7
+            height: parent.height * 0.6
+            visible: false
+            border.color: "#212224"
+            radius: 25
+            border.width: 5
+            Text {
+                text: "Summary"
+                font.pixelSize: 20
             }
         }
 
@@ -62,18 +85,31 @@ Rectangle {
             }
 
             MyButton {
-                customText: "Umiem!"
-                btnWidth: 200
+                iconsrc: "qrc:assets/close-icon.svg"
                 onClicked: {
-                    cardLoader.item.playKnowAnimation();
+                    var front = cardModel.get(currentIndex).front
+                    var back = cardModel.get(currentIndex).back
+                    needRepeatedCardModel.addCard(front, back)
+                    needRepeated++
+
+                    if(cardModel.rowCount() === currentIndex + 1){
+                        cardLoader.item.playDontKnowEnd();
+                    }else {
+                        cardLoader.item.playDontKnowAnimation();
+                    }
                 }
             }
 
             MyButton {
-                customText: "Powtórz"
-                btnWidth: 200
+                iconsrc: "qrc:assets/check-icon.svg"
                 onClicked: {
-                    cardLoader.item.playDontKnowAnimation();
+                    learned++
+
+                    if(cardModel.rowCount() === currentIndex + 1){
+                        cardLoader.item.playKnowEnd();
+                    }else {
+                        cardLoader.item.playKnowAnimation();
+                    }
                 }
             }
         }
@@ -94,6 +130,10 @@ Rectangle {
 
     CardModel {
         id: cardModel
+    }
+
+    CardModel {
+        id: needRepeatedCardModel
     }
 
     function updateCard() {

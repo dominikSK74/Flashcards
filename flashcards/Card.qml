@@ -14,6 +14,7 @@ Item {
     property int flipDuration: 600
 
     signal nextCard();
+    signal viewSummary();
 
     Flipable {
         id: flipable
@@ -192,6 +193,131 @@ Item {
             flipBackThenKnow.start()
         } else {
             slideOutLeftKnow.start()
+        }
+    }
+
+    SequentialAnimation {
+        id: dontKnowEndAnimation
+        running: false
+
+        PropertyAnimation { target: cardRoot; property: "border.color"; to: "#f39c12"; duration: 120 }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 1.08; duration: 180; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "rotation"; to: -15; duration: 180; easing.type: Easing.OutQuad }
+        }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "x"; to: -cardRoot.width - parent.width * 0.1; duration: 260; easing.type: Easing.InQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 0; duration: 260; easing.type: Easing.InQuad }
+        }
+
+        onStopped: {
+            dontKnowEndAnimation2.start();
+        }
+    }
+
+    SequentialAnimation {
+        id: dontKnowEndAnimation2
+        running: false
+
+        PropertyAnimation { target: cardRoot; property: "border.color"; to: "#f39c12"; duration: 120 }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 1.08; duration: 180; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "rotation"; to: -15; duration: 180; easing.type: Easing.OutQuad }
+        }
+
+        ScriptAction { script: viewSummary(); }
+
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "x"; to: -cardRoot.width - parent.width * 0.1; duration: 260; easing.type: Easing.InQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 0; duration: 260; easing.type: Easing.InQuad }
+        }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 0.0; duration: 360; easing.type: Easing.InOutQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 0; duration: 360; easing.type: Easing.InOutQuad }
+        }
+        ScriptAction { script: cardRoot.visible = false }
+
+        onStopped: {
+        }
+    }
+
+    SequentialAnimation {
+        id: flipBackThenDontKnowEnd
+        running: false
+        ScriptAction { script: flipable.flipped = false }
+        PauseAnimation { duration: flipDuration }
+        ScriptAction { script: dontKnowEndAnimation.start() }
+    }
+
+    function playDontKnowEnd() {
+        if (flipable.flipped) {
+            flipBackThenDontKnowEnd.start()
+        } else {
+            dontKnowEndAnimation.start()
+        }
+    }
+
+    SequentialAnimation {
+        id: knowEndAnimation
+        running: false
+
+        PropertyAnimation { target: cardRoot; property: "border.color"; to: "#27ae60"; duration: 120 }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 1.08; duration: 180; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "rotation"; to: 15; duration: 180; easing.type: Easing.OutQuad }
+        }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "x"; to: parent.width + cardRoot.width; duration: 260; easing.type: Easing.InQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 0; duration: 260; easing.type: Easing.InQuad }
+        }
+
+        onStopped: {
+            knowEndAnimation2.start();
+        }
+    }
+
+    SequentialAnimation {
+        id: knowEndAnimation2
+        running: false
+
+        PropertyAnimation { target: cardRoot; property: "border.color"; to: "#27ae60"; duration: 120 }
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 1.08; duration: 180; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "rotation"; to: 15; duration: 180; easing.type: Easing.OutQuad }
+        }
+
+        ScriptAction { script: viewSummary(); }
+
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "x"; to: parent.width + cardRoot.width; duration: 260; easing.type: Easing.InQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 0; duration: 260; easing.type: Easing.InQuad }
+        }
+
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 0.0; duration: 360; easing.type: Easing.InOutQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 0; duration: 360; easing.type: Easing.InOutQuad }
+        }
+
+        ScriptAction { script: cardRoot.visible = false }
+
+
+        onStopped: {
+        }
+    }
+
+    SequentialAnimation {
+        id: flipBackThenKnowEnd
+        running: false
+        ScriptAction { script: flipable.flipped = false }
+        PauseAnimation { duration: flipDuration }
+        ScriptAction { script: knowEndAnimation.start() }
+    }
+
+    function playKnowEnd() {
+        if (flipable.flipped) {
+            flipBackThenKnowEnd.start()
+        } else {
+            knowEndAnimation.start()
         }
     }
 }

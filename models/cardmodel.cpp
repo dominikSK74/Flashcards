@@ -183,6 +183,18 @@ QVariantMap CardModel::get(int row) const
     return map;
 }
 
+void CardModel::addCard(QString front, QString back){
+    CardObject card;
+    card.setFront(front);
+    card.setBack(back);
+
+    qDebug() << "Dodaje front: " << front << " back: " << back;
+
+    beginInsertRows(QModelIndex(), m_list.count(), m_list.count());
+    m_list.append(card);
+    endInsertRows();
+}
+
 
 
 
