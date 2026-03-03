@@ -13,6 +13,8 @@ Rectangle {
     property int currentIndex: 0
     property int learned: 0
     property int needRepeated: 0
+    property color fontWhiteColor: "#f9fafc"
+    property color backgroundColor: "#212224"
 
     AppHeader {
         id: header
@@ -40,6 +42,78 @@ Rectangle {
             top: header.bottom
         }
 
+        Item {
+            id: infoBar
+            width: cardLoader.width
+            height: 60
+            anchors {
+                bottom: cardLoader.top
+                bottomMargin: 25
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            Rectangle {
+                id: needRepeatedCounter
+                height: 30
+                width: 140
+                border.width: 3
+                border.color: "#f39c12"
+                radius: 5
+                color: backgroundColor
+
+                anchors {
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                }
+
+                Text {
+                    font.family: appFont
+                    font.pixelSize: 16
+                    color: fontWhiteColor
+                    text: "Need repeated " + needRepeated
+                    anchors.centerIn: parent
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
+
+            Rectangle {
+                id: learnedCounter
+                height: 30
+                width: 140
+                border.width: 3
+                border.color: "#27ae60"
+                radius: 5
+                color: backgroundColor
+
+                anchors {
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+
+
+                Text {
+                    font.family: appFont
+                    font.pixelSize: 16
+                    color: fontWhiteColor
+                    text: "Learned " + learned
+                    anchors.centerIn: parent
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
+        }
+
         Loader {
             id: cardLoader
             anchors.centerIn: parent
@@ -53,8 +127,12 @@ Rectangle {
                 });
 
                 cardLoader.item.viewSummary.connect(function() {
-                    console.log("Wchodz");
-                    // summaryAnim.start();
+                    cardLoader.visible = false
+                    summaryAnimation.start();
+                    needRepeatedButton.opacity = 0;
+                    learnedButton.opacity = 0;
+                    needRepeatedCounter.opacity = 0;
+                    learnedCounter.opacity = 0;
                 });
             }
         }
@@ -69,9 +147,58 @@ Rectangle {
             border.color: "#212224"
             radius: 25
             border.width: 5
+
             Text {
                 text: "Summary"
-                font.pixelSize: 20
+                color: fontWhiteColor
+                font.pixelSize: 24
+                font.family: appFont
+                anchors {
+                    top: parent.top
+                    topMargin: 25
+                    horizontalCenter: parent.horizontalCenter
+                }
+            }
+
+            Column {
+                anchors.centerIn: parent
+                spacing: 15
+
+                Text {
+                    color: fontWhiteColor
+                    font.pixelSize: 18
+                    font.family: appFont
+                    text: learned + "/" + cardModel.rowCount()
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                MyButton {
+                    isIcon: false
+                    customText: "Repeat " + needRepeated + " flashcards"
+                    width: 300
+                    visible: (needRepeated > 0) ? true : false
+                    onClicked: {
+                        console.log("Nowy zestaw z powtarzających");
+                    }
+                }
+
+                MyButton {
+                    isIcon: false
+                    width: 300
+                    customText: "Repeat all flashcards"
+                    onClicked: {
+                        console.log("Powtórz wszystkie");
+                    }
+                }
+
+                MyButton {
+                    isIcon: false
+                    customText: "Back to dashboard"
+                    width: 300
+                    onClicked: {
+                        stackView.push("FlashcardsDashboard.qml");
+                    }
+                }
             }
         }
 
@@ -85,6 +212,7 @@ Rectangle {
             }
 
             MyButton {
+                id: needRepeatedButton
                 iconsrc: "qrc:assets/close-icon.svg"
                 onClicked: {
                     var front = cardModel.get(currentIndex).front
@@ -98,9 +226,17 @@ Rectangle {
                         cardLoader.item.playDontKnowAnimation();
                     }
                 }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.OutQuad
+                    }
+                }
             }
 
             MyButton {
+                id: learnedButton
                 iconsrc: "qrc:assets/check-icon.svg"
                 onClicked: {
                     learned++
@@ -109,6 +245,13 @@ Rectangle {
                         cardLoader.item.playKnowEnd();
                     }else {
                         cardLoader.item.playKnowAnimation();
+                    }
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.OutQuad
                     }
                 }
             }
@@ -156,4 +299,28 @@ Rectangle {
     }
 
     onCurrentIndexChanged: updateCard()
+
+    SequentialAnimation {
+        id: summaryAnimation
+        running: false
+
+        ScriptAction { script: summary.x = summary.x - root.width }
+        ScriptAction { script: summary.border.color = "#9f86ff"}
+        ScriptAction { script: summary.scale = 1.5}
+        ScriptAction { script: summary.rotation = -15 }
+        ScriptAction { script: summary.opacity = 0.5 }
+        ScriptAction { script: summary.visible = true }
+
+        ParallelAnimation {
+            PropertyAnimation { target: summary; property: "x"; to: summary.x + root.width; duration: 260; easing.type: Easing.InQuad }
+            PropertyAnimation { target: summary; property: "opacity"; to: 1; duration: 260; easing.type: Easing.InQuad }
+        }
+
+        ParallelAnimation {
+            PropertyAnimation { target: summary; property: "scale"; to: 1; duration: 180; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: summary; property: "rotation"; to: 0; duration: 180; easing.type: Easing.OutQuad }
+        }
+
+        PropertyAnimation { target: summary; property: "border.color"; to: "#212224"; duration: 180; easing.type: Easing.OutQuad }
+    }
 }
