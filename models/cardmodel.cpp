@@ -195,6 +195,23 @@ void CardModel::addCard(QString front, QString back){
     endInsertRows();
 }
 
+QList<CardObject> CardModel::getList() {
+    return m_list;
+}
+
+void CardModel::loadList(QList<CardObject> list) {
+    beginResetModel();
+    m_list.clear();
+    m_list = list;
+    endResetModel();
+}
+
+void CardModel::clearList() {
+    beginResetModel();
+    m_list.clear();
+    endResetModel();
+}
+
 
 
 

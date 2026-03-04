@@ -320,4 +320,27 @@ Item {
             knowEndAnimation.start()
         }
     }
+
+    function showCard() {
+        cardRoot.visible = true
+        showCardAnimation.start();
+    }
+
+    SequentialAnimation {
+        id: showCardAnimation
+        running: false
+
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "border.color"; to: "#9f86ff"; duration: 0; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "opacity"; to: 1; duration: 0; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "scale"; to: 1; duration: 320; easing.type: Easing.OutQuad }
+        }
+
+        ParallelAnimation {
+            PropertyAnimation { target: cardRoot; property: "rotation"; to: 0; duration: 300; easing.type: Easing.OutQuad }
+            PropertyAnimation { target: cardRoot; property: "border.color"; to: "#212224"; duration: 300; easing.type: Easing.OutQuad }
+        }
+
+
+    }
 }

@@ -127,7 +127,6 @@ Rectangle {
                 });
 
                 cardLoader.item.viewSummary.connect(function() {
-                    cardLoader.visible = false
                     summaryAnimation.start();
                     needRepeatedButton.opacity = 0;
                     learnedButton.opacity = 0;
@@ -178,7 +177,9 @@ Rectangle {
                     width: 300
                     visible: (needRepeated > 0) ? true : false
                     onClicked: {
-                        console.log("Nowy zestaw z powtarzających");
+                        cardModel.loadList(needRepeatedCardModel.getList());
+                        needRepeatedCardModel.clearList();
+                        resetCards();
                     }
                 }
 
@@ -187,7 +188,8 @@ Rectangle {
                     width: 300
                     customText: "Repeat all flashcards"
                     onClicked: {
-                        console.log("Powtórz wszystkie");
+                        needRepeatedCardModel.clearList();
+                        resetCards();
                     }
                 }
 
@@ -286,7 +288,6 @@ Rectangle {
             cardLoader.item.backText = ""
             return
         }
-
         const card = cardModel.get(currentIndex)
         cardLoader.item.frontText = card.front
         cardLoader.item.backText = card.back
@@ -322,5 +323,17 @@ Rectangle {
         }
 
         PropertyAnimation { target: summary; property: "border.color"; to: "#212224"; duration: 180; easing.type: Easing.OutQuad }
+    }
+
+    function resetCards() {
+        learned = 0;
+        needRepeated = 0;
+        cardLoader.item.showCard();
+        needRepeatedButton.opacity = 1;
+        learnedButton.opacity = 1;
+        needRepeatedCounter.opacity = 1;
+        learnedCounter.opacity = 1;
+        summary.visible = false;
+        currentIndex = 0;
     }
 }
