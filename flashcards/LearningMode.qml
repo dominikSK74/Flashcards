@@ -11,6 +11,7 @@ Rectangle {
     property string appFont: "Josefin Sans"
     property string setId: ""
     property int currentIndex: 0
+    property int cardCount: 0
     property int learned: 0
     property int needRepeated: 0
     property color fontWhiteColor: "#f9fafc"
@@ -82,6 +83,15 @@ Rectangle {
                 }
             }
 
+            Text {
+                id: doneCounter
+                font.family: appFont
+                font.pixelSize: 16
+                color: fontWhiteColor
+                text: currentIndex + 1 + " / " + cardCount;
+                anchors.centerIn: parent
+            }
+
             Rectangle {
                 id: learnedCounter
                 height: 30
@@ -132,6 +142,7 @@ Rectangle {
                     learnedButton.opacity = 0;
                     needRepeatedCounter.opacity = 0;
                     learnedCounter.opacity = 0;
+                    doneCounter.opacity = 0;
                 });
             }
         }
@@ -266,6 +277,7 @@ Rectangle {
             cardModel.loadCards(data)
             currentIndex = 0
             updateCard()
+            cardCount = cardModel.rowCount();
         }
     }
 
@@ -335,5 +347,7 @@ Rectangle {
         learnedCounter.opacity = 1;
         summary.visible = false;
         currentIndex = 0;
+        cardCount = cardModel.rowCount();
+        doneCounter.opacity = 1;
     }
 }

@@ -99,16 +99,6 @@ void FirebaseController::saveSet(QString setId, QString setName, QList<CardObjec
         m_firebaseService->sendPostRequest(addCardsUrl, cardsBody, "addNewSet");
 
     }else {
-        // Aktualizujemy set
-        qDebug() << "Aktualizuje set " << setName << "id:" << setId;
-        for(int i = 0; i < list.size(); i++){
-
-              qDebug() << list.at(i).getFront()
-            << " "
-            << list.at(i).getBack();
-
-        }
-
         //DELETING
         QJsonObject deleteBody = prepareDeleteCardsJsonBody(doc);
         QString deleteUrl = QString("https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents:commit").arg(projectId);

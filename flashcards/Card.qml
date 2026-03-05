@@ -33,8 +33,18 @@ Item {
                 font.pixelSize: 20
                 color: fontWhiteColor
                 font.family: appFont
-                anchors.centerIn: parent
                 text: frontText
+
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 10
+                    verticalCenter: parent.verticalCenter
+                }
+
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
             }
         }
 
@@ -46,8 +56,17 @@ Item {
                 font.pixelSize: 20
                 color: fontWhiteColor
                 font.family: appFont
-                anchors.centerIn: parent
                 text: backText
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 10
+                    verticalCenter: parent.verticalCenter
+                }
+
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
             }
         }
 

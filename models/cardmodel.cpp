@@ -150,7 +150,6 @@ void CardModel::importCardsFromCSV(QString filePath) {
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
-        qDebug() << "Line:" << line;
         QList<QString> list = line.split(";");
 
         if(list.size() != 2){
@@ -187,8 +186,6 @@ void CardModel::addCard(QString front, QString back){
     CardObject card;
     card.setFront(front);
     card.setBack(back);
-
-    qDebug() << "Dodaje front: " << front << " back: " << back;
 
     beginInsertRows(QModelIndex(), m_list.count(), m_list.count());
     m_list.append(card);
