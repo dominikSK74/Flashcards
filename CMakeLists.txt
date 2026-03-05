@@ -54,6 +54,8 @@ qt_add_qml_module(appFlashcards
         QML_FILES components/Alert.qml
         QML_FILES flashcards/LearningMode.qml
         QML_FILES flashcards/Card.qml
+        QML_FILES flashcards/+android/FlashcardsDashboard.qml
+        QML_FILES components/+android/TileSet.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
