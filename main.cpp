@@ -11,6 +11,7 @@
 #include <QSslSocket>
 #include <models/tilesetmodel.h>
 #include <models/cardmodel.h>
+#include <models/quizmodel.h>
 
 int main(int argc, char *argv[])
 {
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<TileSetModel>("my.models", 1, 0, "TileSetModel");
     qmlRegisterType<CardModel>("my.models", 1, 0, "CardModel");
+    qmlRegisterType<QuizModel>("my.models", 1, 0, "QuizModel");
 
     QObject::connect(
         &engine,

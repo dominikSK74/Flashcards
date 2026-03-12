@@ -234,3 +234,17 @@ void FirebaseController::deleteSet(QString setId) {
         m_firebaseService->sendDeleteRequest(url, "deleteSet");
     });
 }
+
+void FirebaseController::loadQuizzes() {
+
+    // QSettings settings(":config.ini", QSettings::IniFormat);
+    // QString projectId = settings.value("firebaseProjectId").toString();
+    // QString userId = m_firebaseService->getUUID();
+
+    // QString url = QString(
+    //                   "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/"
+    //                   ).arg(projectId, userId);
+
+    // m_firebaseService->sendGetRequest(url, "loadSets");
+    emit quizzesLoaded(QJsonDocument());
+}

@@ -19,6 +19,8 @@ public:
     Q_INVOKABLE void loadCards(QString setId);
     Q_INVOKABLE void deleteSet(QString setId);
 
+    Q_INVOKABLE void loadQuizzes();
+
 signals:
     void logout();
     void setsLoaded(const QJsonDocument &data);
@@ -27,6 +29,8 @@ signals:
     void deleteSetCompleted();
     void deleteCardsLoaded(const QJsonDocument &data);
     void deleteCardsDone();
+
+    void quizzesLoaded(const QJsonDocument &data);
 
 private:
     FirebaseService* m_firebaseService;

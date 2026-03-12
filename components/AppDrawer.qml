@@ -43,6 +43,7 @@ Rectangle {
         DrawerButton {
             customText: "Quiz"
             btnWidth: root.width - 20
+            onClicked: stackView.push("../quizzes/QuizzesDashboard.qml");
         }
     }
 
