@@ -4,7 +4,7 @@ FirebaseController::FirebaseController(FirebaseService* firebaseService, QObject
     : QObject{parent}, m_firebaseService(firebaseService)
 {
     connect(m_firebaseService, &FirebaseService::finished, this,
-            [this](const QJsonDocument &doc, QString operationName) {
+            [this](const QJsonDocument &doc, QString operationName, QString nextPageToken, QString setId) {
 
         if(operationName == "addNewSet"){
             emit addingSetCompleted();
@@ -14,6 +14,9 @@ FirebaseController::FirebaseController(FirebaseService* firebaseService, QObject
         }
         if(operationName == "loadCards"){
             emit cardsLoaded(doc);
+            if(!nextPageToken.isEmpty()){
+                loadCards(setId, nextPageToken);
+            }
         }
         if(operationName == "deleteSet"){
             emit deleteSetCompleted();
@@ -24,8 +27,12 @@ FirebaseController::FirebaseController(FirebaseService* firebaseService, QObject
         if(operationName == "deleteCardsDone"){
             emit deleteCardsDone();
         }
-
-
+        if(operationName == "loadCardsFromNextPage"){
+            emit loadCardsFromNextPage(doc);
+            if(!nextPageToken.isEmpty()){
+                loadCards(setId, nextPageToken);
+            }
+        }
     });
 
     connect(m_firebaseService, &FirebaseService::error, this, [this](QString msg) {
@@ -167,18 +174,26 @@ QJsonObject FirebaseController::prepareCardsJsonBody(QString uuid, QString setId
     return cardsBody;
 }
 
-void FirebaseController::loadCards(QString setId) {
+void FirebaseController::loadCards(QString setId, QString nextPageToken) {
 
     QSettings settings(":config.ini", QSettings::IniFormat);
     QString projectId = settings.value("firebaseProjectId").toString();
     QString userUuid = m_firebaseService->getUUID();
+    QString url;
 
+    if(nextPageToken.isEmpty()){
+        url = QString(
+            "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3/cards"
+            ).arg(projectId, userUuid, setId);
 
-    QString url = QString(
-        "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3/cards"
-        ).arg(projectId, userUuid, setId);
+        m_firebaseService->sendGetRequest(url, "loadCards");
+    }else{
+        url = QString(
+            "https://firestore.googleapis.com/v1/projects/%1/databases/(default)/documents/users/%2/sets/%3/cards?pageToken=%4"
+            ).arg(projectId, userUuid, setId, nextPageToken);
 
-    m_firebaseService->sendGetRequest(url, "loadCards");
+        m_firebaseService->sendGetRequest(url, "loadCardsFromNextPage");
+    }
 }
 
 QJsonObject FirebaseController::prepareDeleteCardsJsonBody(QJsonDocument doc){

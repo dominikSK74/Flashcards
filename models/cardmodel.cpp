@@ -151,7 +151,6 @@ void CardModel::importCardsFromCSV(QString filePath) {
     while (!in.atEnd()) {
         QString line = in.readLine();
         QList<QString> list = line.split(";");
-
         if(list.size() != 2){
             emit sendAlert("error", "Error: Bad format of file!");
             return;
@@ -209,6 +208,61 @@ void CardModel::clearList() {
     endResetModel();
 }
 
+void CardModel::addCardsFromNextPage(QJsonDocument doc) {
+    QJsonObject rootObj = doc.object();
+
+    beginResetModel();
+
+    QJsonArray documents = rootObj["documents"].toArray();
+
+    for (const QJsonValue &docVal : documents) {
+        QJsonObject docObj = docVal.toObject();
+        QJsonObject fields = docObj["fields"].toObject();
+
+        QString front = fields["front"].toObject()["stringValue"].toString();
+        QString back = fields["back"].toObject()["stringValue"].toString();
+        QString timestampString = fields["createdAt"].toObject()["timestampValue"].toString();
+
+        QDateTime createdAt = QDateTime::fromString(timestampString, Qt::ISODate);
+        createdAt.setTimeZone(QTimeZone::utc());
+        int index = fields["index"].toObject()["stringValue"].toString().toInt();
+
+        m_list.append(CardObject(front, back, createdAt, index));
+    }
+
+    std::sort(m_list.begin(), m_list.end(), [](const CardObject &a, const CardObject &b) {
+        return a.getIndex() < b.getIndex();
+    });
+    endResetModel();
+}
+
+QJsonDocument CardModel::mergeJsonDocuments(const QVariant& variantA, const QVariant& variantB)
+{
+    QJsonObject objA;
+    if (variantA.typeId() == QMetaType::QJsonDocument) {
+        objA = variantA.toJsonDocument().object();
+    } else if (variantA.typeId() == QMetaType::QJsonObject) {
+        objA = variantA.toJsonObject();
+    }
+
+    QJsonObject objB;
+    if (variantB.typeId() == QMetaType::QJsonDocument) {
+        objB = variantB.toJsonDocument().object();
+    } else if (variantB.typeId() == QMetaType::QJsonObject) {
+        objB = variantB.toJsonObject();
+    }
+
+    QJsonArray arrayA = objA["documents"].toArray();
+    QJsonArray arrayB = objB["documents"].toArray();
+
+    for (const QJsonValue& item : arrayB) {
+        arrayA.append(item);
+    }
+
+    objA["documents"] = arrayA;
+
+    return QJsonDocument(objA);
+}
 
 
 

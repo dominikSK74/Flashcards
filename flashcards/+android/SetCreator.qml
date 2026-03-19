@@ -151,6 +151,14 @@ Rectangle {
         }
     }
 
+    Connections {
+        target: firebaseController
+        function onLoadCardsFromNextPage(data) {
+            cardModel.addCardsFromNextPage(data)
+            jsonData = cardModel.mergeJsonDocuments(jsonData, data)
+        }
+    }
+
     Timer {
         id: closeAlertTimer
         interval: 5000

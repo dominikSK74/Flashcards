@@ -227,6 +227,7 @@ Rectangle {
             MyButton {
                 id: needRepeatedButton
                 iconsrc: "qrc:assets/close-icon.svg"
+                btnWidth: 200
                 onClicked: {
                     var front = cardModel.get(currentIndex).front
                     var back = cardModel.get(currentIndex).back
@@ -251,6 +252,7 @@ Rectangle {
             MyButton {
                 id: learnedButton
                 iconsrc: "qrc:assets/check-icon.svg"
+                btnWidth: 200
                 onClicked: {
                     learned++
 
@@ -275,6 +277,16 @@ Rectangle {
         target: firebaseController
         function onCardsLoaded(data) {
             cardModel.loadCards(data)
+            currentIndex = 0
+            updateCard()
+            cardCount = cardModel.rowCount();
+        }
+    }
+
+    Connections {
+        target: firebaseController
+        function onLoadCardsFromNextPage(data) {
+            cardModel.addCardsFromNextPage(data)
             currentIndex = 0
             updateCard()
             cardCount = cardModel.rowCount();
@@ -349,5 +361,20 @@ Rectangle {
         currentIndex = 0;
         cardCount = cardModel.rowCount();
         doneCounter.opacity = 1;
+    }
+
+    Shortcut {
+        sequence: "Right"
+        onActivated: learnedButton.clicked()
+    }
+
+    Shortcut {
+        sequence: "Left"
+        onActivated: needRepeatedButton.clicked()
+    }
+
+    Shortcut {
+        sequence: "Space"
+        onActivated: cardLoader.item.toggleFlip()
     }
 }

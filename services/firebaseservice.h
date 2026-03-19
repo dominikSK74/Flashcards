@@ -17,7 +17,7 @@ public:
     void sendDeleteRequest(QString url, QString operationName);
     QString getUUID();
 signals:
-    void finished(QJsonDocument doc, QString operationName);
+    void finished(QJsonDocument doc, QString operationName, QString nextPageToken = "", QString setId = "");
     void error(QString msg);
 
 private:

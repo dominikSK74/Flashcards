@@ -16,7 +16,7 @@ public:
     Q_INVOKABLE void saveSet(QString setId, QString setName, QList<CardObject> list, QJsonDocument doc);
     QJsonObject prepareCardsJsonBody(QString uuid, QString setId, QList<CardObject> list);
     QJsonObject prepareDeleteCardsJsonBody(QJsonDocument doc);
-    Q_INVOKABLE void loadCards(QString setId);
+    Q_INVOKABLE void loadCards(QString setId, QString nextPageToken = "");
     Q_INVOKABLE void deleteSet(QString setId);
 
     Q_INVOKABLE void loadQuizzes();
@@ -29,6 +29,7 @@ signals:
     void deleteSetCompleted();
     void deleteCardsLoaded(const QJsonDocument &data);
     void deleteCardsDone();
+    void loadCardsFromNextPage(const QJsonDocument &data);
 
     void quizzesLoaded(const QJsonDocument &data);
 

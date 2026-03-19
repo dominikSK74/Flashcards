@@ -101,6 +101,7 @@ Item {
         ]
 
         MouseArea {
+            id: mouseArea
             anchors.fill: parent
 
             onClicked: {
@@ -359,7 +360,9 @@ Item {
             PropertyAnimation { target: cardRoot; property: "rotation"; to: 0; duration: 300; easing.type: Easing.OutQuad }
             PropertyAnimation { target: cardRoot; property: "border.color"; to: "#212224"; duration: 300; easing.type: Easing.OutQuad }
         }
+    }
 
-
+    function toggleFlip() {
+        flipable.flipped = !flipable.flipped
     }
 }

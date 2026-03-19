@@ -2,6 +2,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonObject>
+#include <QJsonArray>
 
 FirebaseService::FirebaseService(Session* session, QObject *parent)
     : QObject{parent}, m_session(session)
@@ -16,8 +17,6 @@ void FirebaseService::sendGetRequest(QString url, QString operationName) {
         "Authorization",
         QString("Bearer %1").arg(idToken).toUtf8()
     );
-
-
     QNetworkReply* reply = m_networkAccessManager.get(request);
 
     connect(reply, &QNetworkReply::finished, this, [reply, this, operationName]{
@@ -33,12 +32,23 @@ void FirebaseService::sendGetRequest(QString url, QString operationName) {
 
         QJsonParseError parseError;
         QJsonDocument doc = QJsonDocument::fromJson(response, &parseError);
+        QString nextPageToken = "";
+        QString setId = "";
+        QJsonObject jsonObj = doc.object();
+        if (jsonObj.contains("nextPageToken")) {
+            nextPageToken = jsonObj["nextPageToken"].toString();
+            QString nameField = jsonObj["documents"].toArray().first().toObject()["name"].toString();
+            int startIndex = nameField.indexOf("/sets/") + 6;
+            int endIndex = nameField.indexOf("/cards/", startIndex);
+            setId = nameField.mid(startIndex, endIndex - startIndex);
+        }
 
         if (parseError.error != QJsonParseError::NoError) {
             emit error(parseError.errorString());
             return;
         }
-        emit finished(doc, operationName);
+
+        emit finished(doc, operationName, nextPageToken, setId);
     });
 
 

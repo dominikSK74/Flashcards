@@ -168,6 +168,14 @@ Rectangle {
         }
     }
 
+    Connections {
+        target: firebaseController
+        function onLoadCardsFromNextPage(data) {
+            cardModel.addCardsFromNextPage(data)
+            jsonData = cardModel.mergeJsonDocuments(jsonData, data)
+        }
+    }
+
     FileDialog {
         id: fileDialog
         title: "Choose csv file"
